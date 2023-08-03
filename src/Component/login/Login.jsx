@@ -1,5 +1,5 @@
  import style from "./login.module.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect} from "react";
 import Logo from './wanderlist (1).png';
 function Login() {
@@ -36,7 +36,7 @@ function Login() {
         if (username != '' && password != '') {
             try {
                 // Send login request to the server
-                const response = await fetch('http://127.0.0.1:3000/login', {
+                const response = await fetch('https://wanderlist-api.onrender.com/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function Login() {
                     const { token } = data;
                     localStorage.setItem('token', token);
 
-                    fetch('http://127.0.0.1:3000/protected', {
+                    fetch('https://wanderlist-api.onrender.com/protected', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function Login() {
                             window.location.href = '/Homepage';
                         
                         })
-                        .catch((error) => {
+                        .catch(() => {
                             console.error(data.error);
                         });
                 } else {

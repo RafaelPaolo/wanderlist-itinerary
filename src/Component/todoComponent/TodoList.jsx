@@ -21,7 +21,7 @@ const TodoList = ({ userID, place, day }) => {
     // Fetch the Todo records from the database based on userID, place, and day
     const fetchTodos = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/todos?userID=${userID}&place=${place}&day=${day}`);
+        const response = await fetch(`https://wanderlist-api.onrender.com/todos?userID=${userID}&place=${place}&day=${day}`);
         if (response.ok) {
           const todosData = await response.json();
           setTodos(todosData);
@@ -40,7 +40,7 @@ const TodoList = ({ userID, place, day }) => {
     // Make API request to delete the todo with the given ID
     try {
       // Make the delete request to your backend endpoint
-      await fetch(`http://localhost:3000/todos/${_id}`, {
+      await fetch(`https://wanderlist-api.onrender.com/todos/${_id}`, {
         method: 'DELETE',
       });
 
@@ -75,7 +75,7 @@ const TodoList = ({ userID, place, day }) => {
 
     
       // Make the API request to create a new todo
-      const response = await fetch('http://localhost:3000/todos', {
+      const response = await fetch('https://wanderlist-api.onrender.com/todos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
