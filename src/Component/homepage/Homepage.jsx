@@ -41,14 +41,14 @@ function HomePage() {
 
   const fetchData = async () => {
 
-    const response = await fetch(`http://127.0.0.1:3000/users`)
+    const response = await fetch(`https://wanderlist-api.onrender.com/users`)
     const { data } = await response.json();
     setDisplayName(data)
   };
 
   const fetchDataPlace = async () => {
 
-    const response = await fetch(`http://127.0.0.1:3000/showPlace`)
+    const response = await fetch(`https://wanderlist-api.onrender.com/showPlace`)
     const { data } = await response.json();
     setPlaceData(data);
 
@@ -104,7 +104,7 @@ function HomePage() {
       }
 
       // If the place does not exist for the user, proceed to add the new place
-      fetch('http://127.0.0.1:3000/addPlace', {
+      fetch('https://wanderlist-api.onrender.com/addPlace', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ function HomePage() {
 
   // HANDLE DELETE
   const handleDelete = (id) => () => {
-    fetch(`http://127.0.0.1:3000/deletePlace/${id}`, {
+    fetch(`https://wanderlist-api.onrender.com/deletePlace/${id}`, {
       method: 'DELETE',
     })
       .then((response) => response.text())
