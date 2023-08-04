@@ -145,7 +145,9 @@ function HomePage() {
 
   return (
     <div>
-      <header id={style.header}>Hello, {displayName.find(data => data._id === user)?.username} <a href="/" style={{ fontSize: "20px", color: "white", border: "solid 2px", borderRadius: "20px", backgroundColor: "#79C853", padding: "8px" }}>Logout</a></header>
+      {displayName && displayName.length > 0 && (
+        <header id={style.header}>Hello, {displayName.find(data => data._id === user)?.username} <a href="/" style={{ fontSize: "20px", color: "white", border: "solid 2px", borderRadius: "20px", backgroundColor: "#79C853", padding: "8px" }}>Logout</a></header>
+      )}
       <div id={style.container}>
         <div id={style.addPlace}>
           <div id={style.form}>
