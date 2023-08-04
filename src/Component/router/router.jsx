@@ -1,4 +1,5 @@
-import {createBrowserRouter} from 'react-router-dom';
+// import {createBrowserRouter} from 'react-router-dom';
+import { createRouter } from 'react-router-dom'; // Fix the import
 import Login from '../login/Login';
 import Register from '../register/Register';
 import HomePage from '../homepage/Homepage';
@@ -6,7 +7,7 @@ import HomePage from '../homepage/Homepage';
 import Itinerary from '../ItineraryComponent/Itinerary';
 
 
-const router = createBrowserRouter([
+const router = createRouter([
     {
         path:'/',
         element:<Login/>,
@@ -21,10 +22,10 @@ const router = createBrowserRouter([
         path:'/register',
         element:<Register/>
     },
-    {
-        path:'/home',
-        element:<HomePage/>
-    },
+    // {
+    //     path:'/home',
+    //     element:<HomePage/>
+    // },
 
     {
         path:'/todos/:place',
