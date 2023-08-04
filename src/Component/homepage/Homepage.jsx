@@ -43,7 +43,7 @@ function HomePage() {
 
     const response = await fetch(`https://wanderlist-api.onrender.com/users`)
     const { data } = await response.json();
-    setDisplayName(data)
+    setDisplayName(data.data);
   };
 
   const fetchDataPlace = async () => {

@@ -21,22 +21,22 @@ function Login() {
     
       }, []);
 
-    const handleSubmit = async (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (username === '') {
             setErrorUsername(true);
         } else {
             setErrorUsername(false);
         }
-
+    
         if (password === '') {
             setErrorPassword(true);
         } else {
             setErrorPassword(false);
         }
-
-        if (username != '' && password != '') {
+    
+        if (username !== '' && password !== '') {
             try {
                 // Send login request to the server
                 const response = await fetch('https://wanderlist-api.onrender.com/login', {
@@ -46,28 +46,24 @@ function Login() {
                     },
                     body: JSON.stringify({ username, password }),
                 });
-
+    
                 const data = await response.json();
-               
-
+    
                 if (response.ok) {
                     const { token } = data;
                     localStorage.setItem('token', token);
-
+    
                     fetch('https://wanderlist-api.onrender.com/protected', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${token}`,
-                            // Add any other custom headers here
                         },
                     })
                         .then((response) => response.json())
                         .then((data) => {
-                            localStorage.setItem('UserID', data);
-                            // window.location.href = '/homepage';
+                            localStorage.setItem('UserID', JSON.stringify(data)); // Convert data to JSON string
                             navigate('/homepage');
-                        
                         })
                         .catch(() => {
                             console.error(data.error);
@@ -78,9 +74,9 @@ function Login() {
             } catch (error) {
                 console.error(error);
             }
-
         }
     };
+    
 
     return (
         <div id={style.container}>
