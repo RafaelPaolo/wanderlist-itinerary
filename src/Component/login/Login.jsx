@@ -1,5 +1,6 @@
  import style from "./login.module.css";
 import { Link } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { useState, useEffect} from "react";
 import Logo from './wanderlist (1).png';
 function Login() {
@@ -8,6 +9,8 @@ function Login() {
     const [password, setPassword] = useState('');
     const [errorUsername, setErrorUsername] = useState(false);
     const [errorPassword, setErrorPassword] = useState(false);
+
+    const history = useHistory();
 
     useEffect(() => {
         // Clean up local storage data when component unmounts
@@ -62,7 +65,8 @@ function Login() {
                         .then((response) => response.json())
                         .then((data) => {
                             localStorage.setItem('UserID', data);
-                            window.location.href = '/homepage';
+                            // window.location.href = '/homepage';
+                            history.push('/homepage');
                         
                         })
                         .catch(() => {
