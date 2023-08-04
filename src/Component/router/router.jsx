@@ -1,5 +1,5 @@
-// import {createBrowserRouter} from 'react-router-dom';
-import { createRouter } from 'react-router-dom'; // Fix the import
+import {createBrowserRouter} from 'react-router-dom';
+// import { createRouter } from 'react-router-dom'; // Fix the import
 import Login from '../login/Login';
 import Register from '../register/Register';
 import HomePage from '../homepage/Homepage';
@@ -7,7 +7,7 @@ import HomePage from '../homepage/Homepage';
 import Itinerary from '../ItineraryComponent/Itinerary';
 
 
-const router = createRouter([
+const router = createBrowserRouter([
     {
         path:'/',
         element:<Login/>,
