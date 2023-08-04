@@ -3,17 +3,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaEye } from 'react-icons/fa';
 import { FaBeer } from 'react-icons/fa';
-// import { FaEdit } from 'react-icons/fa';
-// import { format } from 'date-fns';
 
 function HomePage() {
   const [place, setPlace] = useState("");
   const [toDate, setToDate] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [placeData, setPlaceData] = useState([]);
- // const [isAvailable, setIsAvailable] = useState(false);
+  const [displayName, setDisplayName] = useState([]);
+  const user = localStorage.getItem('UserID');
 
-  // FORMAT DATE
   const formatDate = (dateString) => {
     const inputDate = new Date(dateString);
     return `${inputDate.getFullYear()}-${(inputDate.getMonth() + 1)
@@ -21,69 +19,41 @@ function HomePage() {
       .padStart(2, "0")}-${inputDate.getDate().toString().padStart(2, "0")}`;
   };
 
-
-  const user = localStorage.getItem('UserID');
-  let displayPlace = [];
-  displayPlace = placeData.filter((obj) => {
-    if (obj.user === user) {
-      return obj;
-    }
-  })
-
-  const [displayName, setDisplayName] = useState([]);
-  const name = displayName.filter((showname) => {
-
-    if (showname._id === user) {
-      return showname;
-    }
-  });
-
-
   const fetchData = async () => {
-
-    const response = await fetch(`https://wanderlist-api.onrender.com/users`)
-    const { data } = await response.json();
-    setDisplayName(data.data);
+    try {
+      const response = await fetch(`https://wanderlist-api.onrender.com/users`);
+      const { data } = await response.json();
+      setDisplayName(data.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const fetchDataPlace = async () => {
-
-    const response = await fetch(`https://wanderlist-api.onrender.com/showPlace`)
-    const { data } = await response.json();
-    setPlaceData(data);
-
+    try {
+      const response = await fetch(`https://wanderlist-api.onrender.com/showPlace`);
+      const { data } = await response.json();
+      setPlaceData(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-
-
 
   useEffect(() => {
     fetchData();
     fetchDataPlace();
   }, []);
 
-
-
-  // CHECK IF THE PLACE ALREADY EXISTS IN THE DB
-  // const checkPlace = placeData.filter((data) => {
-  //   if (data.place === place) {
-  //     return data;
-  //   }
-  // });
-
-//refactored the handleSubmitPlace so that user can still enter a place with similar name as other users
-  // SUBMIT BUTTON
   function handleSubmitPlace(e) {
-    let hasError = false;
-
     e.preventDefault();
+    let hasError = false;
 
     if (place.length === 0 || place.length === "") {
       alert("Please enter a place");
       hasError = true;
     }
     if (toDate === 0 || toDate === "") {
-      alert("please select the end date");
+      alert("Please select the end date");
       hasError = true;
     }
 
@@ -95,7 +65,6 @@ function HomePage() {
         toDate
       };
 
-      // Check if the place already exists for the logged-in user
       const existingPlace = placeData.find(data => data.place === place && data.user === user);
 
       if (existingPlace) {
@@ -103,7 +72,6 @@ function HomePage() {
         return;
       }
 
-      // If the place does not exist for the user, proceed to add the new place
       fetch('https://wanderlist-api.onrender.com/addPlace', {
         method: 'POST',
         headers: {
@@ -114,7 +82,6 @@ function HomePage() {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          //setIsAvailable(data.isAvailable); // Assuming the API returns an "isAvailable" flag
           if (data.isAvailable) {
             alert("Dates are not available");
           } else {
@@ -128,7 +95,6 @@ function HomePage() {
     }
   }
 
-  // HANDLE DELETE
   const handleDelete = (id) => () => {
     fetch(`https://wanderlist-api.onrender.com/deletePlace/${id}`, {
       method: 'DELETE',
@@ -136,23 +102,20 @@ function HomePage() {
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
+        window.location.reload(true);
       })
       .catch((error) => {
         console.error(error);
       });
-
-    window.location.reload(true);
   };
 
+  const displayPlace = placeData.filter((obj) => obj.user === user);
 
-
-  //for LIST OF itineraries
   const mapList = displayPlace.map((item) => (
     <div key={item._id} id={style.yourPlace}>
       <div>
-        {/* Display the data properties here */}
-        {/* <h1><a href="/">{item.place}</a></h1> */}
-        <h1><Link to={{
+        <h1>
+          <Link to={{
             pathname: `/todos/${item.place}`,
             state: {
               user: item.user,
@@ -160,13 +123,11 @@ function HomePage() {
               fromDate: item.fromDate,
               toDate: item.toDate,
             },
-          }}>{item.place}</Link></h1>
-        <h2>From : {formatDate(item.fromDate)}</h2>
-        <h2>To : {formatDate(item.toDate)}</h2>
-        {/* Add other properties as needed */}
-
+          }}>{item.place}</Link>
+        </h1>
+        <h2>From: {formatDate(item.fromDate)}</h2>
+        <h2>To: {formatDate(item.toDate)}</h2>
         <div>
-
           <button id={style.deleteButton} onClick={handleDelete(item._id)}><FaBeer /></button>
           <Link to={{
             pathname: `/todos/${item.place}`,
@@ -182,14 +143,11 @@ function HomePage() {
     </div>
   ));
 
-
   return (
     <div>
-      <header id={style.header}>Hello, {name.map((data) => data.username)} <a href="/" style={{ fontSize: "20px", color: " white", border: "solid 2px", borderRadius: "20px", backgroundColor:"#79C853", padding: "8px" }}>Logout</a></header>
+      <header id={style.header}>Hello, {displayName.find(data => data._id === user)?.username} <a href="/" style={{ fontSize: "20px", color: "white", border: "solid 2px", borderRadius: "20px", backgroundColor: "#79C853", padding: "8px" }}>Logout</a></header>
       <div id={style.container}>
-        {/* ADD your itinerary */}
         <div id={style.addPlace}>
-
           <div id={style.form}>
             <form onSubmit={handleSubmitPlace}>
               <div>
@@ -201,7 +159,7 @@ function HomePage() {
                 />
                 <br />
                 <br />
-                <label style={{ color: "White", fontSize: "18px" }} >From :</label>
+                <label style={{ color: "White", fontSize: "18px" }}>From:</label>
                 <br />
                 <input
                   type="date"
@@ -216,20 +174,15 @@ function HomePage() {
                 <br />
                 <br />
                 <button type="submit" id={style.buttonSubmit}>Submit</button>
-
               </div>
             </form>
           </div>
         </div>
-        <div id="h1List" ><h1 >List of Schedules</h1></div>
+        <div id="h1List"><h1>List of Schedules</h1></div>
       </div>
       <br />
-
-
       <div id={style.flexMap}>{mapList}</div>
-
     </div>
-
   );
 }
 
